@@ -1,20 +1,17 @@
-pub fn run() {
-    let input = include_str!("input.txt");
-    println!(
-        "day 3\n  part 1: {}\n  part 2: {}\n",
-        part_1(input),
-        part_2(input)
-    );
-}
-
 type BoardNum = i64;
-struct Board {
-    rows: Vec<Vec<(BoardNum, bool)>>,
+
+use arrayvec::ArrayVec;
+
+#[derive(Clone)]
+struct Board<const WIDTH: usize, const HEIGHT: usize> {
+    rows: ArrayVec<ArrayVec<(BoardNum, bool), WIDTH>, HEIGHT>,
     last_num: Option<BoardNum>,
+    row_tally: [usize; HEIGHT],
+    col_tally: [usize; WIDTH],
 }
 
-impl Board {
-    fn new(config: &str) -> Board {
+impl<const WIDTH: usize, const HEIGHT: usize> Board<WIDTH, HEIGHT> {
+    fn new(config: &str) -> Board<WIDTH, HEIGHT> {
         Board {
             rows: config
                 .lines()
@@ -25,6 +22,8 @@ impl Board {
                 })
                 .collect(),
             last_num: None,
+            row_tally: [0; HEIGHT],
+            col_tally: [0; WIDTH],
         }
     }
 
@@ -41,24 +40,21 @@ impl Board {
             return true;
         }
 
-        let mut bingo = false;
-        let mut col_hits = vec![0; self.rows.len()];
-        for row in self.rows.iter_mut() {
-            let mut row_hits = 0;
-            for (i, col) in row.iter_mut().enumerate() {
-                col.1 = col.1 || col.0 == num;
-                row_hits += col.1 as usize;
-                col_hits[i] += col.1 as usize;
+        for (i, row) in self.rows.iter_mut().enumerate() {
+            for (j, col) in row.iter_mut().enumerate() {
+                if !col.1 && col.0 == num {
+                    col.1 = true;
+                    self.row_tally[i] += 1;
+                    self.col_tally[j] += 1;
+                    if self.row_tally[i] == HEIGHT || self.col_tally[j] == WIDTH {
+                        self.last_num = Some(num);
+                        return true;
+                    }
+                }
             }
-            bingo = bingo || row_hits == row.len();
-        }
-        bingo = bingo || col_hits.iter().any(|x| *x == self.rows.len());
-
-        if bingo {
-            self.last_num = Some(num)
         }
 
-        bingo
+        false
     }
 
     fn is_done(&self) -> bool {
@@ -66,7 +62,10 @@ impl Board {
     }
 }
 
-fn parse(contents: &str) -> (Vec<BoardNum>, Vec<Board>) {
+type ParsedInput = (Vec<BoardNum>, Vec<Board<5, 5>>);
+
+#[aoc_generator(day4)]
+fn parse(contents: &str) -> ParsedInput {
     let (nums, rest) = contents.split_once("\n").unwrap();
     let (_, rest) = rest.split_once("\n").unwrap();
     let boards: Vec<_> = rest.split("\n\n").map(Board::new).collect();
@@ -78,9 +77,9 @@ fn parse(contents: &str) -> (Vec<BoardNum>, Vec<Board>) {
     (nums, boards)
 }
 
-fn part_1(contents: &str) -> BoardNum {
-    let (nums, mut boards) = parse(contents);
-
+#[aoc(day4, part1)]
+fn part_1(parsed: &ParsedInput) -> BoardNum {
+    let (nums, mut boards) = parsed.clone();
     for n in nums {
         for board in boards.iter_mut() {
             if board.add_num_and_check(n) {
@@ -92,8 +91,9 @@ fn part_1(contents: &str) -> BoardNum {
     panic!("No winner found!")
 }
 
-fn part_2(contents: &str) -> BoardNum {
-    let (nums, mut boards) = parse(contents);
+#[aoc(day4, part2)]
+fn part_2(parsed: &ParsedInput) -> BoardNum {
+    let (nums, mut boards) = parsed.clone();
     for n in nums {
         let mut new_boards = vec![];
         let len = boards.len();
@@ -113,14 +113,16 @@ fn part_2(contents: &str) -> BoardNum {
 
 #[cfg(test)]
 mod tests {
+    use super::parse;
     use super::part_1;
     use super::part_2;
 
     #[test]
     fn test_part_1() {
         assert_eq!(
-            part_1(
-                "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
+            part_1(&parse(
+                "\
+7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
 
 22 13 17 11  0
  8  2 23  4 24
@@ -139,7 +141,7 @@ mod tests {
 18  8 23 26 20
 22 11 13  6  5
  2  0 12  3  7"
-            ),
+            )),
             4512
         );
     }
@@ -147,8 +149,9 @@ mod tests {
     #[test]
     fn test_part_2() {
         assert_eq!(
-            part_2(
-                "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
+            part_2(&parse(
+                "\
+7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
 
 22 13 17 11  0
  8  2 23  4 24
@@ -167,7 +170,7 @@ mod tests {
 18  8 23 26 20
 22 11 13  6  5
  2  0 12  3  7"
-            ),
+            )),
             1924
         );
     }
