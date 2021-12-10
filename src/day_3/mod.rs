@@ -1,12 +1,3 @@
-pub fn run() {
-    let input = include_str!("input.txt");
-    println!(
-        "day 3\n  part 1: {}\n  part 2: {}\n",
-        part_1(input),
-        part_2(input)
-    );
-}
-
 fn get_most_common_bit_string(contents: &str) -> String {
     contents
         .lines()
@@ -28,6 +19,7 @@ fn invert_bit_string(bits: &str) -> String {
         .collect()
 }
 
+#[aoc(day3, part1)]
 fn part_1(contents: &str) -> u64 {
     let most_common_bits = get_most_common_bit_string(contents);
     let gamma = u64::from_str_radix(&most_common_bits, 2).unwrap();
@@ -65,6 +57,7 @@ where
     u64::from_str_radix(remaining[0], 2).unwrap()
 }
 
+#[aoc(day3, part2)]
 fn part_2(contents: &str) -> u64 {
     let lines = contents.lines().collect::<Vec<_>>();
     let oxy = reading(&lines, |num_ones, len| 2 * num_ones >= len);

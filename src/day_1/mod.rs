@@ -1,16 +1,9 @@
-pub fn run() {
-    let input = include_str!("input.txt");
-    println!(
-        "day 1\n  part 1:{}\n  part 2: {}\n",
-        part_1(input),
-        part_2(input)
-    );
-}
-
+#[aoc(day1, part1)]
 fn part_1(contents: &str) -> usize {
     count_window_increases(contents, 1)
 }
 
+#[aoc(day1, part2)]
 fn part_2(contents: &str) -> usize {
     count_window_increases(contents, 3)
 }
