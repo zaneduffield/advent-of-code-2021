@@ -68,12 +68,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_part_1() {
-        assert_eq!(37, part_1(&parse("16,1,2,0,4,2,7,1,2,14")));
-    }
-
-    #[test]
-    fn test_part_2() {
-        assert_eq!(168, part_2(&parse("16,1,2,0,4,2,7,1,2,14")));
+    fn test() {
+        let input = "16,1,2,0,4,2,7,1,2,14";
+        assert_eq!(37, part_1(&parse(input)));
+        assert_eq!(168, part_2(&parse(input)));
     }
 }

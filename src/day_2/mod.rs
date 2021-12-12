@@ -32,22 +32,19 @@ fn part_2(contents: &str) -> i64 {
 
 #[cfg(test)]
 mod tests {
-    use super::part_1;
-    use super::part_2;
+    use super::*;
 
     #[test]
-    fn test_part_1() {
-        assert_eq!(part_1(""), 0);
-        assert_eq!(part_1("down 1"), 0);
-        assert_eq!(part_1("down 2\nforward 5"), 10);
-        assert_eq!(part_1("down 52\nup 2\nforward 10"), 500);
-    }
+    fn test() {
+        let input = "\
+forward 5
+down 5
+forward 8
+up 3
+down 8
+forward 2";
 
-    #[test]
-    fn test_part_2() {
-        assert_eq!(part_2(""), 0);
-        assert_eq!(part_2("down 1"), 0);
-        assert_eq!(part_2("down 2\nforward 5"), 50);
-        assert_eq!(part_2("down 52\nup 2\nforward 10"), 5000);
+        assert_eq!(part_1(input), 150);
+        assert_eq!(part_2(input), 900);
     }
 }

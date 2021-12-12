@@ -37,12 +37,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_part_1() {
-        assert_eq!(5934, part_1(&parse("3,4,3,1,2")));
-    }
-
-    #[test]
-    fn test_part_2() {
-        assert_eq!(26984457539, part_2(&parse("3,4,3,1,2")));
+    fn test() {
+        let input = "3,4,3,1,2";
+        assert_eq!(5934, part_1(&parse(input)));
+        assert_eq!(26984457539, part_2(&parse(input)));
     }
 }

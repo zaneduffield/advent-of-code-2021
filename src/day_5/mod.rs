@@ -110,15 +110,11 @@ fn part_2(lines: &[Line]) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use super::parse;
-    use super::part_1;
-    use super::part_2;
+    use super::*;
 
     #[test]
-    fn test_part_1() {
-        assert_eq!(
-            part_1(&parse(
-                "\
+    fn test() {
+        let input = "\
 0,9 -> 5,9
 8,0 -> 0,8
 9,4 -> 3,4
@@ -129,40 +125,11 @@ mod tests {
 3,4 -> 1,4
 0,0 -> 8,8
 5,5 -> 8,2
-"
-            )),
-            5
-        );
-    }
+";
+        assert_eq!(5, part_1(&parse(input)));
+        assert_eq!(12, part_2(&parse(input)));
 
-    #[test]
-    fn test_part_2() {
-        assert_eq!(
-            part_2(&parse(
-                "\
-0,9 -> 5,9
-8,0 -> 0,8
-9,4 -> 3,4
-2,2 -> 2,1
-7,0 -> 7,4
-6,4 -> 2,0
-0,9 -> 2,9
-3,4 -> 1,4
-0,0 -> 8,8
-5,5 -> 8,2
-"
-            )),
-            12
-        );
-
-        assert_eq!(
-            part_2(&parse(
-                "\
-1,1 -> 3,3
-3,3 -> 1,1
-"
-            )),
-            3
-        );
+        let input = "1,1 -> 3,3\n3,3 -> 1,1";
+        assert_eq!(part_2(&parse(input)), 3);
     }
 }

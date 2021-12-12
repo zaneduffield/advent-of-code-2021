@@ -20,22 +20,12 @@ fn count_window_increases(contents: &str, window_size: usize) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use super::part_1;
-    use super::part_2;
+    use super::*;
 
     #[test]
-    fn test_part_1() {
-        assert_eq!(part_1(""), 0);
-        assert_eq!(part_1("1"), 0);
-        assert_eq!(part_1("1\n1\n2\n-1\n3"), 2);
-        assert_eq!(part_1("-1\n3\n3\n4\n10\n101\n101\n102"), 5);
-    }
-
-    #[test]
-    fn test_part_2() {
-        assert_eq!(part_2(""), 0);
-        assert_eq!(part_2("1"), 0);
-        assert_eq!(part_2("1\n1\n2\n-1\n3"), 1);
-        assert_eq!(part_2("-1\n3\n3\n4\n10\n101\n101\n102"), 5);
+    fn test() {
+        let input = "199\n200\n208\n210\n200\n207\n240\n269\n260\n263";
+        assert_eq!(part_1(input), 7);
+        assert_eq!(part_2(input), 5);
     }
 }

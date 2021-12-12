@@ -106,32 +106,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_part_1() {
-        assert_eq!(
-            15,
-            part_1(&parse(
-                "\
+    fn test() {
+        let input = "\
 2199943210
 3987894921
 9856789892
 8767896789
-9899965678"
-            ))
-        );
-    }
+9899965678";
 
-    #[test]
-    fn test_part_2() {
-        assert_eq!(
-            1134,
-            part_2(&parse(
-                "\
-2199943210
-3987894921
-9856789892
-8767896789
-9899965678"
-            ))
-        );
+        assert_eq!(15, part_1(&parse(input)));
+        assert_eq!(1134, part_2(&parse(input)));
     }
 }
