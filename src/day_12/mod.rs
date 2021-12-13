@@ -1,94 +1,122 @@
-use std::collections::{BTreeMap, BTreeSet};
+use std::vec;
 
-const START: &str = "start";
-const END: &str = "end";
+use rustc_hash::FxHashMap;
 
-struct Vertex<'a> {
-    name: &'a str,
-    is_small: bool,
-    nbours: BTreeSet<&'a str>,
+const SIZE: usize = 15;
+type Graph = Vec<Vec<Cave>>;
+
+const START_NAME: &str = "start";
+const END_NAME: &str = "end";
+const END_ID: u8 = 0;
+const START_ID: u8 = 1;
+const START: Cave = Cave::Small(START_ID);
+const END: Cave = Cave::Small(END_ID);
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+enum Cave {
+    Big(u8),
+    Small(u8),
 }
+use Cave::*;
 
-impl<'a> Vertex<'a> {
-    fn new(name: &str) -> Vertex {
-        Vertex {
-            name,
-            is_small: name.chars().all(char::is_lowercase),
-            nbours: BTreeSet::new(),
+impl Cave {
+    fn idx(self) -> usize {
+        match self {
+            Small(v) | Big(v) => v as usize,
         }
     }
 }
 
-type VertexByName<'a> = BTreeMap<&'a str, Vertex<'a>>;
-
-fn insert_pair<'a>(from: &'a str, to: &'a str, vertex_map: &mut VertexByName<'a>) {
-    vertex_map
-        .entry(to)
-        .or_insert_with(|| Vertex::new(to))
-        .nbours
-        .insert(from);
+#[derive(Debug, Clone)]
+struct VisitTracker {
+    counts: Vec<u8>,
+    can_visit_twice: bool,
 }
 
-fn parse(input: &str) -> VertexByName {
-    let mut vertex_map = VertexByName::new();
+impl VisitTracker {
+    fn new(can_visit_twice: bool, size: usize) -> Self {
+        let mut counts = vec![0; size];
+        counts[END.idx()] = 2;
+        counts[START.idx()] = 2;
+        Self {
+            counts,
+            can_visit_twice,
+        }
+    }
 
+    fn can_visit(&self, s: Cave) -> bool {
+        let c = self.counts[s.idx()];
+        c == 0 || (c == 1 && self.can_visit_twice)
+    }
+
+    fn add(&mut self, s: Cave) {
+        self.counts[s.idx()] += 1;
+        self.can_visit_twice = self.can_visit_twice && self.counts[s.idx()] < 2;
+    }
+}
+
+fn num_paths(graph: &[Vec<Cave>], start: Cave, tracker: &VisitTracker) -> usize {
+    graph[start.idx()]
+        .iter()
+        .map(|&n| {
+            if n == END {
+                1
+            } else if tracker.can_visit(n) {
+                if matches!(n, Small(_)) {
+                    let mut new_tracker = tracker.clone();
+                    new_tracker.add(n);
+                    num_paths(graph, n, &new_tracker)
+                } else {
+                    num_paths(graph, n, tracker)
+                }
+            } else {
+                0
+            }
+        })
+        .sum()
+}
+
+#[inline]
+fn add_cave<'a>(cave_by_name: &mut FxHashMap<&'a str, Cave>, name: &'a str, last_id: &mut u8) {
+    cave_by_name.entry(name).or_insert_with(|| {
+        *last_id += 1;
+        if name.chars().all(char::is_lowercase) {
+            Small(*last_id)
+        } else {
+            Big(*last_id)
+        }
+    });
+}
+
+#[aoc_generator(day12)]
+fn parse(input: &str) -> Graph {
+    // TODO make this capable of processing graphs of any size
+    let mut graph = vec![Vec::new(); SIZE];
+    let mut cave_by_name = FxHashMap::default();
+    cave_by_name.insert(START_NAME, START);
+    cave_by_name.insert(END_NAME, END);
+    let mut last_id = std::cmp::max(START_ID, END_ID);
     for line in input.lines() {
         let (src, dest) = line.split_once('-').unwrap();
-        insert_pair(src, dest, &mut vertex_map);
-        insert_pair(dest, src, &mut vertex_map);
+        add_cave(&mut cave_by_name, src, &mut last_id);
+        add_cave(&mut cave_by_name, dest, &mut last_id);
+
+        let (src, dest) = (cave_by_name[&src], cave_by_name[&dest]);
+        graph[src.idx()].push(dest);
+        graph[dest.idx()].push(src);
     }
 
-    vertex_map
+    graph
 }
 
-fn num_paths<'a>(
-    start: &'a Vertex,
-    end: &Vertex,
-    map: &VertexByName,
-    visited: &mut BTreeSet<&'a str>,
-    mut have_double_visited: bool,
-) -> u32 {
-    if start.is_small && have_double_visited && visited.contains(start.name)
-        || (start.name == START || start.name == END) && visited.contains(start.name)
-    {
-        0
-    } else if std::ptr::eq(start, end) {
-        1
-    } else {
-        if start.is_small {
-            have_double_visited = !visited.insert(start.name) || have_double_visited;
-        };
-
-        start
-            .nbours
-            .iter()
-            .map(|&n| map.get(n).unwrap())
-            .map(|n| num_paths(n, end, map, &mut visited.clone(), have_double_visited))
-            .sum()
-    }
-}
-
-fn solve(input: &str, double_small_visits_allowed: bool) -> u32 {
-    let map = parse(input);
-    let start = map.get(START).unwrap();
-    let end = map.get(END).unwrap();
-
-    num_paths(
-        start,
-        end,
-        &map,
-        &mut BTreeSet::new(),
-        !double_small_visits_allowed,
-    )
-}
 #[aoc(day12, part1)]
-fn part_1(input: &str) -> u32 {
-    solve(input, false)
+fn part_1(graph: &[Vec<Cave>]) -> usize {
+    num_paths(graph, START, &VisitTracker::new(false, graph.len()))
 }
 
 #[aoc(day12, part2)]
-fn part_2(input: &str) -> u32 {
-    solve(input, true)
+fn part_2(graph: &[Vec<Cave>]) -> usize {
+    num_paths(graph, START, &VisitTracker::new(true, graph.len()))
 }
 
 #[cfg(test)]
@@ -106,7 +134,7 @@ b-d
 A-end
 b-end";
 
-        assert_eq!(10, part_1(input));
-        assert_eq!(36, part_2(input));
+        assert_eq!(10, part_1(&parse(input)));
+        assert_eq!(36, part_2(&parse(input)));
     }
 }
