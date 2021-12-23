@@ -108,13 +108,13 @@ fn expand(grid: Grid, factor: usize) -> Grid {
 }
 
 #[aoc(day15, part1)]
-fn part_1(input: &str) -> usize {
+pub fn part_1(input: &str) -> usize {
     let grid = parse(input);
     grid.solve().expect("A path to the end should exist")
 }
 
 #[aoc(day15, part2)]
-fn part_2(input: &str) -> usize {
+pub fn part_2(input: &str) -> usize {
     let grid = expand(parse(input), 5);
     grid.solve().expect("A path to the end should exist")
 }

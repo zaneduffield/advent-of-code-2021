@@ -1,5 +1,5 @@
 #[aoc(day2, part1)]
-fn part_1(contents: &str) -> i64 {
+pub fn part_1(contents: &str) -> i64 {
     let (hor, depth) = contents.lines().fold((0, 0), |(hor, depth), s| {
         let (word, num) = s.split_once(" ").unwrap();
         let num: i64 = num.parse().unwrap();
@@ -15,7 +15,7 @@ fn part_1(contents: &str) -> i64 {
 }
 
 #[aoc(day2, part2)]
-fn part_2(contents: &str) -> i64 {
+pub fn part_2(contents: &str) -> i64 {
     let (hor, depth, _aim) = contents.lines().fold((0, 0, 0), |(hor, depth, aim), s| {
         let (word, num) = s.split_once(" ").unwrap();
         let num: i64 = num.parse().unwrap();

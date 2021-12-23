@@ -105,14 +105,14 @@ fn parse(input: &str) -> Vec<Vec<Entry>> {
 }
 
 #[aoc(day18, part1)]
-fn part_1(input: &str) -> u32 {
+pub fn part_1(input: &str) -> u32 {
     let nums = parse(input);
     let sum = nums.into_iter().reduce(|a, b| reduce(add(&a, &b))).unwrap();
     magnitude(sum)
 }
 
 #[aoc(day18, part2)]
-fn part_2(input: &str) -> u32 {
+pub fn part_2(input: &str) -> u32 {
     let nums = parse(input);
     (0..nums.len())
         .flat_map(|i| (0..nums.len()).map(move |j| (i, j)))

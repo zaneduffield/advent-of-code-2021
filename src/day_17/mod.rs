@@ -50,7 +50,7 @@ impl Target {
 }
 
 fn parse(mut input: &str) -> Target {
-    input = input.strip_prefix("target area: ").unwrap();
+    input = input.trim().strip_prefix("target area: ").unwrap();
     let (x_range, y_range) = input.split_once(", ").unwrap();
 
     let parse_pair = |input: &str, prefix: &str| {
@@ -73,14 +73,14 @@ fn parse(mut input: &str) -> Target {
 }
 
 #[aoc(day17, part1)]
-fn part_1(input: &str) -> i32 {
+pub fn part_1(input: &str) -> i32 {
     let target = parse(input);
     let max_init_y_vel = target.max_y_vel();
     max_init_y_vel * (max_init_y_vel + 1) / 2
 }
 
 #[aoc(day17, part2)]
-fn part_2(input: &str) -> u32 {
+pub fn part_2(input: &str) -> u32 {
     let target = parse(input);
     let mut count = 0;
     for x_v in target.lo_x_vel()..=target.hi_x_vel() {

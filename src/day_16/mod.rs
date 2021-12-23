@@ -147,12 +147,12 @@ fn parse(input: &str) -> Packet {
 }
 
 #[aoc(day16, part1)]
-fn part_1(input: &str) -> u32 {
+pub fn part_1(input: &str) -> u32 {
     parse(input).version_sum()
 }
 
 #[aoc(day16, part2)]
-fn part_2(input: &str) -> u64 {
+pub fn part_2(input: &str) -> u64 {
     parse(input).value()
 }
 

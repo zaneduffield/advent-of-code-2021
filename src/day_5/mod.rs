@@ -17,7 +17,6 @@ fn parse_coords(coords: &str) -> Pair {
     )
 }
 
-#[aoc_generator(day5)]
 fn parse(contents: &str) -> Vec<Line> {
     contents
         .lines()
@@ -99,13 +98,15 @@ fn solve(lines: &[Line], handle_diag_line: impl Fn(&mut Grid, Line)) -> usize {
 }
 
 #[aoc(day5, part1)]
-fn part_1(lines: &[Line]) -> usize {
-    solve(lines, |_, _| {})
+pub fn part_1(input: &str) -> usize {
+    let lines = parse(input);
+    solve(&lines, |_, _| {})
 }
 
 #[aoc(day5, part2)]
-fn part_2(lines: &[Line]) -> usize {
-    solve(lines, add_diag_line)
+pub fn part_2(input: &str) -> usize {
+    let lines = parse(input);
+    solve(&lines, add_diag_line)
 }
 
 #[cfg(test)]
@@ -126,10 +127,10 @@ mod tests {
 0,0 -> 8,8
 5,5 -> 8,2
 ";
-        assert_eq!(5, part_1(&parse(input)));
-        assert_eq!(12, part_2(&parse(input)));
+        assert_eq!(5, part_1(input));
+        assert_eq!(12, part_2(input));
 
         let input = "1,1 -> 3,3\n3,3 -> 1,1";
-        assert_eq!(part_2(&parse(input)), 3);
+        assert_eq!(part_2(input), 3);
     }
 }

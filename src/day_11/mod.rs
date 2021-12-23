@@ -4,7 +4,6 @@ type Grid = [[u8; HEIGHT]; WIDTH];
 
 type Coords = (usize, usize);
 
-#[aoc_generator(day11)]
 fn parse(input: &str) -> Grid {
     let mut out = [[0; HEIGHT]; WIDTH];
 
@@ -68,8 +67,8 @@ fn generation(grid: &mut Grid) -> u64 {
 }
 
 #[aoc(day11, part1)]
-fn part_1(grid: &Grid) -> u64 {
-    let mut grid = *grid;
+pub fn part_1(input: &str) -> u64 {
+    let mut grid = parse(input);
     let mut flashes = 0;
     for _ in 0..100 {
         flashes += generation(&mut grid)
@@ -79,8 +78,8 @@ fn part_1(grid: &Grid) -> u64 {
 }
 
 #[aoc(day11, part2)]
-fn part_2(grid: &Grid) -> usize {
-    let mut grid = *grid;
+pub fn part_2(input: &str) -> usize {
+    let mut grid = parse(input);
     1 + (0..)
         .position(|_| generation(&mut grid) == (WIDTH * HEIGHT) as u64)
         .unwrap()
@@ -104,7 +103,7 @@ mod tests {
 4846848554
 5283751526";
 
-        assert_eq!(1656, part_1(&parse(input)));
-        assert_eq!(195, part_2(&parse(input)));
+        assert_eq!(1656, part_1(input));
+        assert_eq!(195, part_2(input));
     }
 }

@@ -21,7 +21,6 @@ impl Grid {
     }
 }
 
-#[aoc_generator(day9)]
 fn parse(input: &str) -> Grid {
     let width = input.lines().next().unwrap().chars().count() as i32;
     let height = input.lines().count() as i32;
@@ -57,7 +56,8 @@ fn minima_coords(rows: &Grid) -> Vec<Coords> {
 }
 
 #[aoc(day9, part1)]
-fn part_1(rows: &Grid) -> u32 {
+pub fn part_1(input: &str) -> u32 {
+    let rows = &parse(input);
     minima_coords(rows)
         .iter()
         .flat_map(|(i, j)| rows.get((*i, *j)))
@@ -92,7 +92,8 @@ fn basin_size(rows: &Grid, coords: Coords) -> usize {
 }
 
 #[aoc(day9, part2)]
-fn part_2(rows: &Grid) -> usize {
+pub fn part_2(input: &str) -> usize {
+    let rows = &parse(input);
     minima_coords(rows)
         .iter()
         .map(|coords| basin_size(rows, *coords))
@@ -114,7 +115,7 @@ mod tests {
 8767896789
 9899965678";
 
-        assert_eq!(15, part_1(&parse(input)));
-        assert_eq!(1134, part_2(&parse(input)));
+        assert_eq!(15, part_1(input));
+        assert_eq!(1134, part_2(input));
     }
 }

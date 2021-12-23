@@ -17,7 +17,6 @@ struct Grid {
     folds: Vec<Fold>,
 }
 
-#[aoc_generator(day13)]
 fn parse(input: &str) -> Grid {
     let mut folds = vec![];
     let mut values = FxHashSet::default();
@@ -90,15 +89,15 @@ fn render(grid: &Grid) -> String {
 }
 
 #[aoc(day13, part1)]
-fn part_1(grid: &Grid) -> usize {
-    let mut grid = grid.to_owned();
+pub fn part_1(input: &str) -> usize {
+    let mut grid = parse(input);
     fold_grid(&mut grid);
     grid.values.len()
 }
 
 #[aoc(day13, part2)]
-fn part_2(grid: &Grid) -> String {
-    let mut grid = grid.to_owned();
+pub fn part_2(input: &str) -> String {
+    let mut grid = parse(input);
     while !grid.folds.is_empty() {
         fold_grid(&mut grid);
     }
@@ -134,7 +133,7 @@ mod tests {
 fold along y=7
 fold along x=5";
 
-        assert_eq!(17, part_1(&parse(input)));
+        assert_eq!(17, part_1(input));
         assert_eq!(
             "
 #####
@@ -142,7 +141,7 @@ fold along x=5";
 #...#
 #...#
 #####",
-            part_2(&parse(input))
+            part_2(input)
         );
     }
 }

@@ -88,7 +88,6 @@ fn add_cave<'a>(cave_by_name: &mut FxHashMap<&'a str, Cave>, name: &'a str, last
     });
 }
 
-#[aoc_generator(day12)]
 fn parse(input: &str) -> Graph {
     // TODO make this capable of processing graphs of any size
     let mut graph = vec![Vec::new(); SIZE];
@@ -110,13 +109,15 @@ fn parse(input: &str) -> Graph {
 }
 
 #[aoc(day12, part1)]
-fn part_1(graph: &[Vec<Cave>]) -> usize {
-    num_paths(graph, START, &VisitTracker::new(false, graph.len()))
+pub fn part_1(input: &str) -> usize {
+    let graph = parse(input);
+    num_paths(&graph, START, &VisitTracker::new(false, graph.len()))
 }
 
 #[aoc(day12, part2)]
-fn part_2(graph: &[Vec<Cave>]) -> usize {
-    num_paths(graph, START, &VisitTracker::new(true, graph.len()))
+pub fn part_2(input: &str) -> usize {
+    let graph = parse(input);
+    num_paths(&graph, START, &VisitTracker::new(true, graph.len()))
 }
 
 #[cfg(test)]
@@ -134,7 +135,7 @@ b-d
 A-end
 b-end";
 
-        assert_eq!(10, part_1(&parse(input)));
-        assert_eq!(36, part_2(&parse(input)));
+        assert_eq!(10, part_1(input));
+        assert_eq!(36, part_2(input));
     }
 }

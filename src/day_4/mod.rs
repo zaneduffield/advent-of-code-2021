@@ -64,7 +64,6 @@ impl<const WIDTH: usize, const HEIGHT: usize> Board<WIDTH, HEIGHT> {
 
 type ParsedInput = (Vec<BoardNum>, Vec<Board<5, 5>>);
 
-#[aoc_generator(day4)]
 fn parse(contents: &str) -> ParsedInput {
     let (nums, rest) = contents.split_once("\n").unwrap();
     let (_, rest) = rest.split_once("\n").unwrap();
@@ -78,8 +77,8 @@ fn parse(contents: &str) -> ParsedInput {
 }
 
 #[aoc(day4, part1)]
-fn part_1(parsed: &ParsedInput) -> BoardNum {
-    let (nums, mut boards) = parsed.clone();
+pub fn part_1(input: &str) -> BoardNum {
+    let (nums, mut boards) = parse(input);
     for n in nums {
         for board in boards.iter_mut() {
             if board.add_num_and_check(n) {
@@ -92,8 +91,8 @@ fn part_1(parsed: &ParsedInput) -> BoardNum {
 }
 
 #[aoc(day4, part2)]
-fn part_2(parsed: &ParsedInput) -> BoardNum {
-    let (nums, mut boards) = parsed.clone();
+pub fn part_2(input: &str) -> BoardNum {
+    let (nums, mut boards) = parse(input);
     for n in nums {
         let mut new_boards = vec![];
         let len = boards.len();
@@ -138,7 +137,7 @@ mod tests {
 22 11 13  6  5
  2  0 12  3  7";
 
-        assert_eq!(part_1(&parse(input)), 4512);
-        assert_eq!(part_2(&parse(input)), 1924);
+        assert_eq!(part_1(input), 4512);
+        assert_eq!(part_2(input), 1924);
     }
 }

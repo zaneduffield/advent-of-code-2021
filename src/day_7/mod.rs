@@ -1,8 +1,8 @@
 type Position = i64;
 
-#[aoc_generator(day7)]
 fn parse(input: &str) -> Vec<Position> {
     input
+        .trim()
         .split(',')
         .map(|n| n.parse::<Position>().unwrap())
         .collect()
@@ -54,13 +54,15 @@ where
 }
 
 #[aoc(day7, part1)]
-fn part_1(crabs: &[Position]) -> i64 {
-    solve(crabs, abs_diff)
+pub fn part_1(input: &str) -> i64 {
+    let crabs = parse(input);
+    solve(&crabs, abs_diff)
 }
 
 #[aoc(day7, part2)]
-fn part_2(crabs: &[Position]) -> i64 {
-    solve(crabs, triangle_diff)
+pub fn part_2(input: &str) -> i64 {
+    let crabs = parse(input);
+    solve(&crabs, triangle_diff)
 }
 
 #[cfg(test)]
@@ -70,7 +72,7 @@ mod tests {
     #[test]
     fn test() {
         let input = "16,1,2,0,4,2,7,1,2,14";
-        assert_eq!(37, part_1(&parse(input)));
-        assert_eq!(168, part_2(&parse(input)));
+        assert_eq!(37, part_1(input));
+        assert_eq!(168, part_2(input));
     }
 }

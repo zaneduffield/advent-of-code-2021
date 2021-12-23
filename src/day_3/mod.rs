@@ -20,7 +20,7 @@ fn invert_bit_string(bits: &str) -> String {
 }
 
 #[aoc(day3, part1)]
-fn part_1(contents: &str) -> u64 {
+pub fn part_1(contents: &str) -> u64 {
     let most_common_bits = get_most_common_bit_string(contents);
     let gamma = u64::from_str_radix(&most_common_bits, 2).unwrap();
     let epsilon = u64::from_str_radix(&invert_bit_string(&most_common_bits), 2).unwrap();
@@ -58,7 +58,7 @@ where
 }
 
 #[aoc(day3, part2)]
-fn part_2(contents: &str) -> u64 {
+pub fn part_2(contents: &str) -> u64 {
     let lines = contents.lines().collect::<Vec<_>>();
     let oxy = reading(&lines, |num_ones, len| 2 * num_ones >= len);
     let co2 = reading(&lines, |num_ones, len| 2 * num_ones < len);

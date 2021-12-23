@@ -24,7 +24,7 @@ fn parse_line(line: &str) -> Result<Vec<char>, ParseErr> {
 }
 
 #[aoc(day10, part1)]
-fn part_1(input: &str) -> u64 {
+pub fn part_1(input: &str) -> u64 {
     input
         .lines()
         .map(parse_line)
@@ -55,7 +55,7 @@ fn score_stack(stack: Vec<char>) -> u64 {
 }
 
 #[aoc(day10, part2)]
-fn part_2(input: &str) -> u64 {
+pub fn part_2(input: &str) -> u64 {
     let scores: Vec<_> = input
         .lines()
         .map(parse_line)

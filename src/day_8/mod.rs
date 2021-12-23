@@ -1,6 +1,5 @@
 use itertools::Itertools;
 
-#[aoc_generator(day8, part1)]
 fn parse_1(input: &str) -> Vec<usize> {
     input
         .lines()
@@ -10,7 +9,8 @@ fn parse_1(input: &str) -> Vec<usize> {
 }
 
 #[aoc(day8, part1)]
-fn part_1(lens: &[usize]) -> usize {
+pub fn part_1(input: &str) -> usize {
+    let lens = parse_1(input);
     lens.iter().filter(|&&len| len != 5 && len != 6).count()
 }
 
@@ -20,7 +20,6 @@ struct Pattern {
     outputs: Vec<Word>,
 }
 
-#[aoc_generator(day8, part2)]
 fn parse_2(input: &str) -> Vec<Pattern> {
     input
         .lines()
@@ -102,7 +101,8 @@ fn decode(pattern: &Pattern) -> u32 {
 }
 
 #[aoc(day8, part2)]
-fn part_2(patterns: &[Pattern]) -> u32 {
+pub fn part_2(input: &str) -> u32 {
+    let patterns = parse_2(input);
     patterns.iter().map(decode).sum()
 }
 
@@ -124,7 +124,7 @@ bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd | ed bcgafe cdgba cbg
 egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
 gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce";
 
-        assert_eq!(26, part_1(&parse_1(input)));
-        assert_eq!(61229, part_2(&parse_2(input)));
+        assert_eq!(26, part_1(input));
+        assert_eq!(61229, part_2(input));
     }
 }

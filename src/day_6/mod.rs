@@ -12,24 +12,26 @@ fn population_after_generations(fishies: &Fishies, generations: i32) -> u64 {
     fishies.iter().sum()
 }
 
-#[aoc_generator(day6)]
 fn parse(input: &str) -> Fishies {
     let mut counts = [0; MAX_AGE + 1];
     input
+        .trim()
         .split(',')
-        .map(|n| n.parse::<usize>().unwrap())
+        .map(|n| n.parse::<usize>().expect(&format!("invalid input: {}", n)))
         .for_each(|n| counts[n] += 1);
     counts
 }
 
 #[aoc(day6, part1)]
-fn part_1(fishies: &Fishies) -> u64 {
-    population_after_generations(fishies, 80)
+pub fn part_1(input: &str) -> u64 {
+    let fishies = parse(input);
+    population_after_generations(&fishies, 80)
 }
 
 #[aoc(day6, part2)]
-fn part_2(fishies: &Fishies) -> u64 {
-    population_after_generations(fishies, 256)
+pub fn part_2(input: &str) -> u64 {
+    let fishies = parse(input);
+    population_after_generations(&fishies, 256)
 }
 
 #[cfg(test)]
@@ -39,7 +41,7 @@ mod tests {
     #[test]
     fn test() {
         let input = "3,4,3,1,2";
-        assert_eq!(5934, part_1(&parse(input)));
-        assert_eq!(26984457539, part_2(&parse(input)));
+        assert_eq!(5934, part_1(input));
+        assert_eq!(26984457539, part_2(input));
     }
 }
