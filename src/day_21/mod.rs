@@ -1,6 +1,8 @@
 use std::mem;
 
-use rustc_hash::FxHashMap;
+use itertools::Itertools;
+
+const BOARD_LEN: usize = 10;
 
 #[derive(Clone, PartialEq, Eq, Hash, Copy)]
 struct Player {
@@ -13,20 +15,38 @@ impl Player {
         Player { pos, score: 0 }
     }
     fn advance(&mut self, n: usize) {
-        self.pos = (self.pos + n) % 10;
-        self.score += self.pos + 1;
+        // -1 then +1 handles 1-based board indexing
+        self.pos = (self.pos + n - 1) % BOARD_LEN + 1;
+        self.score += self.pos;
+    }
+}
+
+struct DeterministicDie {
+    n: usize,
+    max: usize,
+}
+
+impl Iterator for DeterministicDie {
+    type Item = usize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let next = self.n + 1;
+        self.n = next % self.max;
+        Some(next)
     }
 }
 
 fn parse(input: &str) -> (Player, Player) {
-    let mut lines = input.lines();
-    let p1 = lines.next().unwrap().bytes().last().unwrap() - b'0';
-    let p2 = lines.next().unwrap().bytes().last().unwrap() - b'0';
-    (Player::new(p1 as usize - 1), Player::new(p2 as usize - 1))
+    let (p1, p2) = input
+        .lines()
+        .map(|line| line[line.len() - 2..].trim().parse().unwrap())
+        .collect_tuple()
+        .unwrap();
+    (Player::new(p1), Player::new(p2))
 }
 
-const ROLLS_PER_TURN: usize = 3;
 fn score_part_1((mut p1, mut p2): (Player, Player)) -> usize {
+    const ROLLS_PER_TURN: usize = 3;
     const WINNING_SCORE: usize = 1000;
 
     let die = &mut DeterministicDie { n: 0, max: 100 };
@@ -42,93 +62,78 @@ fn score_part_1((mut p1, mut p2): (Player, Player)) -> usize {
     }
 }
 
-#[derive(PartialEq, Eq, Hash, Clone, Copy)]
-struct State {
-    players: (Player, Player),
-    partial_roll: usize,
-    partial_rolls_remaining: usize,
-}
-struct WinningUniversesCache {
-    cache: FxHashMap<State, (usize, usize)>,
+const MAX_GAME_LEN: usize = 11;
+
+struct UniverseCounts {
+    num_won_by_turn: [usize; MAX_GAME_LEN],
+    num_not_won_by_turn: [usize; MAX_GAME_LEN],
 }
 
-impl WinningUniversesCache {
-    fn new() -> WinningUniversesCache {
-        WinningUniversesCache {
-            cache: FxHashMap::default(),
-        }
-    }
-    fn get(&mut self, args: State) -> (usize, usize) {
-        match self.cache.get(&args) {
-            Some(val) => *val,
-            None => {
-                let val = num_winning_universes(self, args);
-                self.cache.insert(args, val);
-                val
-            }
-        }
-    }
-}
+fn universe_counts(player: Player) -> UniverseCounts {
+    // this holds frequencies indexed by roll totals (less the offset)
+    const ROLL_COUNTS: [usize; 7] = [1, 3, 6, 7, 6, 3, 1];
+    const ROLL_COUNT_OFFSET: usize = 2;
+    const MAX_P2_SCORE: usize = 21;
 
-fn num_winning_universes(cache: &mut WinningUniversesCache, state: State) -> (usize, usize) {
-    let State {
-        players: (p1, p2),
-        partial_roll,
-        partial_rolls_remaining,
-    } = state;
-
-    const WINNING_SCORE: usize = 21;
-    let (mut p1_count, mut p2_count) = (0, 0);
-    for roll in [1, 2, 3] {
-        let roll = roll + partial_roll;
-        let counts = if partial_rolls_remaining == 1 {
-            let mut p1 = p1;
-            p1.advance(roll);
-            if p1.score >= WINNING_SCORE {
-                (0, 1)
-            } else {
-                cache.get(State {
-                    players: (p2, p1),
-                    partial_roll: 0,
-                    partial_rolls_remaining: ROLLS_PER_TURN,
+    // the idea here is to maintain a grid of scores tallies for each position at each turn,
+    // and build it from start to finish in a dynamic programming style.
+    // The key insight is that for each position and score on a turn, you can iterate over the potential rolls:
+    // next_turn[next_pos][next_score] += frequency(roll) * old_turn[old_pos][old_score]
+    let mut scores = [[[0; MAX_P2_SCORE + 1]; BOARD_LEN + 1]; MAX_GAME_LEN];
+    scores[0][player.pos][0] = 1;
+    (1..MAX_GAME_LEN).for_each(|turn| {
+        (1..BOARD_LEN + 1).for_each(|pos| {
+            (0..MAX_P2_SCORE).for_each(|score| {
+                ROLL_COUNTS.iter().enumerate().for_each(|(roll, freq)| {
+                    let new_pos = (pos + roll + ROLL_COUNT_OFFSET) % BOARD_LEN + 1;
+                    let new_score = (score + new_pos).min(MAX_P2_SCORE);
+                    scores[turn][new_pos][new_score] += freq * scores[turn - 1][pos][score];
                 })
-            }
-        } else {
-            cache.get(State {
-                players: (p2, p1),
-                partial_roll: roll,
-                partial_rolls_remaining: partial_rolls_remaining - 1,
             })
-        };
-        p1_count += counts.1;
-        p2_count += counts.0;
-    }
+        })
+    });
 
-    (p1_count, p2_count)
+    let mut result = UniverseCounts {
+        num_not_won_by_turn: [0; MAX_GAME_LEN],
+        num_won_by_turn: [0; MAX_GAME_LEN],
+    };
+    scores.iter().enumerate().for_each(|(turn, turn_data)| {
+        turn_data[1..].iter().for_each(|pos_scores| {
+            result.num_not_won_by_turn[turn] += pos_scores.iter().take(MAX_P2_SCORE).sum::<usize>();
+            result.num_won_by_turn[turn] += pos_scores[MAX_P2_SCORE];
+        })
+    });
+    result
+}
+
+fn sum_product<I, T>(a: I, b: T) -> usize
+where
+    T: Iterator<Item = usize>,
+    I: Iterator<Item = usize>,
+{
+    a.zip(b).fold(0, |sum, (x, y)| sum + x * y)
 }
 
 fn score_part_2((p1, p2): (Player, Player)) -> usize {
-    let mut cache = WinningUniversesCache::new();
-    let (p1_score, p2_score) = cache.get(State {
-        players: (p1, p2),
-        partial_roll: 0,
-        partial_rolls_remaining: ROLLS_PER_TURN,
-    });
-    p1_score.max(p2_score)
-}
+    let (p1, p2) = (universe_counts(p1), universe_counts(p2));
 
-struct DeterministicDie {
-    n: usize,
-    max: usize,
-}
+    // In order to get the number of 'universes' where a player won at a given turn
+    // we need to multiply the not_won counts for the loser by the won counts for the winner,
+    // since all the rolls are independent events.
+    // We sum this product to get the total 'universe' count.
 
-impl Iterator for DeterministicDie {
-    type Item = usize;
+    // p1 wins one turn ahead of p2 since they start first
+    let p1_winning_total = sum_product(
+        p1.num_won_by_turn.into_iter().skip(1),
+        p2.num_not_won_by_turn.into_iter(),
+    );
+    // p2 wins on the same turn as p1
+    let p2_winning_total = sum_product(
+        p1.num_won_by_turn.into_iter(),
+        p2.num_not_won_by_turn.into_iter(),
+    );
 
-    fn next(&mut self) -> Option<Self::Item> {
-        self.n = (self.n + 1) % self.max;
-        Some(self.n)
-    }
+    p1_winning_total.max(p2_winning_total)
 }
 
 #[aoc(day21, part1)]
