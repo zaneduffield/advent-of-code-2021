@@ -34,6 +34,7 @@ pub fn main() {
     run_day!(day_19, "19", include_str!("../../input/2021/day19.txt"));
     run_day!(day_20, "20", include_str!("../../input/2021/day20.txt"));
     run_day!(day_21, "21", include_str!("../../input/2021/day21.txt"));
+    run_day!(day_22, "22", include_str!("../../input/2021/day22.txt"));
 
     println!("Done in {}ms", now.elapsed().as_millis());
 }
