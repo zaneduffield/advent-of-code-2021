@@ -4,15 +4,19 @@ use advent_of_code_2021::*;
 
 macro_rules! run_day {
     ($m:ident, $d:expr, $input: expr) => {
-        println!("day {} part 1: {}", $d, $m::part_1($input));
-        println!("day {} part 2: {}", $d, $m::part_2($input));
-        println!();
+        let instant = Instant::now();
+        println!(
+            "day {}\n  part 1: {}\n  part 2: {}",
+            $d,
+            $m::part_1($input),
+            $m::part_2($input)
+        );
+        println!("done in {:?}\n", instant.elapsed());
     };
 }
 
 pub fn main() {
-    let now = Instant::now();
-
+    let instant = Instant::now();
     run_day!(day_1, "1", include_str!("../../input/2021/day1.txt"));
     run_day!(day_2, "2", include_str!("../../input/2021/day2.txt"));
     run_day!(day_3, "3", include_str!("../../input/2021/day3.txt"));
@@ -39,5 +43,5 @@ pub fn main() {
     run_day!(day_24, "24", include_str!("../../input/2021/day24.txt"));
     run_day!(day_25, "25", include_str!("../../input/2021/day25.txt"));
 
-    println!("Done in {}ms", now.elapsed().as_millis());
+    println!("done in {:?}", instant.elapsed());
 }
