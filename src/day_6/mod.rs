@@ -17,7 +17,7 @@ fn parse(input: &str) -> Fishies {
     input
         .trim()
         .split(',')
-        .map(|n| n.parse::<usize>().expect(&format!("invalid input: {}", n)))
+        .map(|n| n.parse::<usize>().unwrap())
         .for_each(|n| counts[n] += 1);
     counts
 }
