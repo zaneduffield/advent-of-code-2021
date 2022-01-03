@@ -35,6 +35,7 @@ pub fn main() {
     run_day!(day_20, "20", include_str!("../../input/2021/day20.txt"));
     run_day!(day_21, "21", include_str!("../../input/2021/day21.txt"));
     run_day!(day_22, "22", include_str!("../../input/2021/day22.txt"));
+    run_day!(day_23, "23", include_str!("../../input/2021/day23.txt"));
     run_day!(day_24, "24", include_str!("../../input/2021/day24.txt"));
     run_day!(day_25, "25", include_str!("../../input/2021/day25.txt"));
 
