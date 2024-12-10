@@ -151,7 +151,6 @@ fn process(commands: &[Command]) -> u64 {
     })
 }
 
-#[aoc(day22, part1)]
 pub fn part_1(input: &str) -> u64 {
     let final_region = Cuboid {
         x: (-50, 51),
@@ -163,7 +162,6 @@ pub fn part_1(input: &str) -> u64 {
     process(&cuboids)
 }
 
-#[aoc(day22, part2)]
 pub fn part_2(input: &str) -> u64 {
     process(&parse(input, |_| true))
 }

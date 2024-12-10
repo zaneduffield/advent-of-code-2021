@@ -53,13 +53,11 @@ where
     best_sum
 }
 
-#[aoc(day7, part1)]
 pub fn part_1(input: &str) -> i64 {
     let crabs = parse(input);
     solve(&crabs, abs_diff)
 }
 
-#[aoc(day7, part2)]
 pub fn part_2(input: &str) -> i64 {
     let crabs = parse(input);
     solve(&crabs, triangle_diff)

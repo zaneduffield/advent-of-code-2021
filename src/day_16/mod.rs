@@ -146,12 +146,10 @@ fn parse(input: &str) -> Packet {
     parse_packet(&mut bin.chars().peekable())
 }
 
-#[aoc(day16, part1)]
 pub fn part_1(input: &str) -> u32 {
     parse(input).version_sum()
 }
 
-#[aoc(day16, part2)]
 pub fn part_2(input: &str) -> u64 {
     parse(input).value()
 }

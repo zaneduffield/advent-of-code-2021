@@ -88,14 +88,12 @@ fn render(grid: &Grid) -> String {
     out
 }
 
-#[aoc(day13, part1)]
 pub fn part_1(input: &str) -> usize {
     let mut grid = parse(input);
     fold_grid(&mut grid);
     grid.values.len()
 }
 
-#[aoc(day13, part2)]
 pub fn part_2(input: &str) -> String {
     let mut grid = parse(input);
     while !grid.folds.is_empty() {

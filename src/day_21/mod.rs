@@ -136,12 +136,10 @@ fn score_part_2((p1, p2): (Player, Player)) -> usize {
     p1_winning_total.max(p2_winning_total)
 }
 
-#[aoc(day21, part1)]
 pub fn part_1(input: &str) -> usize {
     score_part_1(parse(input))
 }
 
-#[aoc(day21, part2)]
 pub fn part_2(input: &str) -> usize {
     score_part_2(parse(input))
 }

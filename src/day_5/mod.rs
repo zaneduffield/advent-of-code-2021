@@ -97,13 +97,11 @@ fn solve(lines: &[Line], handle_diag_line: impl Fn(&mut Grid, Line)) -> usize {
     grid_count(grid, 2)
 }
 
-#[aoc(day5, part1)]
 pub fn part_1(input: &str) -> usize {
     let lines = parse(input);
     solve(&lines, |_, _| {})
 }
 
-#[aoc(day5, part2)]
 pub fn part_2(input: &str) -> usize {
     let lines = parse(input);
     solve(&lines, add_diag_line)

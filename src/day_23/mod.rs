@@ -246,12 +246,10 @@ impl<const POD_LEN: usize> Debug for Graph<POD_LEN> {
     }
 }
 
-#[aoc(day23, part1)]
 pub fn part_1(input: &str) -> u64 {
     parse::<2>(input).astar_min_cost().unwrap()
 }
 
-#[aoc(day23, part2)]
 pub fn part_2(input: &str) -> u64 {
     let mut input = input.to_owned();
     input.insert_str(42, "  #D#C#B#A#\n  #D#B#A#C#\n");

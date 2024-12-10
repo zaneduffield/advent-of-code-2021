@@ -130,13 +130,11 @@ fn parse(input: &str) -> Poly {
     Poly::new(template, rules)
 }
 
-#[aoc(day14, part1)]
 pub fn part_1(input: &str) -> u64 {
     let mut poly = parse(input);
     poly.solve(10)
 }
 
-#[aoc(day14, part2)]
 pub fn part_2(input: &str) -> u64 {
     let mut poly = parse(input);
     poly.solve(40)

@@ -1,9 +1,7 @@
-#[aoc(day1, part1)]
 pub fn part_1(contents: &str) -> usize {
     count_window_increases(contents, 1)
 }
 
-#[aoc(day1, part2)]
 pub fn part_2(contents: &str) -> usize {
     count_window_increases(contents, 3)
 }

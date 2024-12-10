@@ -73,12 +73,10 @@ fn solve(input: &str) -> (i64, i64) {
     (max, min)
 }
 
-#[aoc(day24, part1)]
 pub fn part_1(input: &str) -> i64 {
     solve(input).0
 }
 
-#[aoc(day24, part2)]
 pub fn part_2(input: &str) -> i64 {
     solve(input).1
 }

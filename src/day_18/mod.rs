@@ -104,14 +104,12 @@ fn parse(input: &str) -> Vec<Vec<Entry>> {
     input.lines().map(parse_num).collect()
 }
 
-#[aoc(day18, part1)]
 pub fn part_1(input: &str) -> u32 {
     let nums = parse(input);
     let sum = nums.into_iter().reduce(|a, b| reduce(add(&a, &b))).unwrap();
     magnitude(sum)
 }
 
-#[aoc(day18, part2)]
 pub fn part_2(input: &str) -> u32 {
     let nums = parse(input);
     (0..nums.len())

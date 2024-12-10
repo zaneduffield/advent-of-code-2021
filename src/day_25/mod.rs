@@ -24,12 +24,10 @@ fn solve(grid: &mut Matrix<u8>) -> usize {
     (0..).position(|_| !step(grid)).unwrap() + 1
 }
 
-#[aoc(day25, part1)]
 pub fn part_1(input: &str) -> usize {
     solve(&mut parse(input))
 }
 
-#[aoc(day25, part2)]
 pub fn part_2(_: &str) -> String {
     String::new()
 }

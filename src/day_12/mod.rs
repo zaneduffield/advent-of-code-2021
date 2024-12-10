@@ -108,13 +108,11 @@ fn parse(input: &str) -> Graph {
     graph
 }
 
-#[aoc(day12, part1)]
 pub fn part_1(input: &str) -> usize {
     let graph = parse(input);
     num_paths(&graph, START, &VisitTracker::new(false, graph.len()))
 }
 
-#[aoc(day12, part2)]
 pub fn part_2(input: &str) -> usize {
     let graph = parse(input);
     num_paths(&graph, START, &VisitTracker::new(true, graph.len()))

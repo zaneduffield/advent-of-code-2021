@@ -55,7 +55,6 @@ fn minima_coords(rows: &Grid) -> Vec<Coords> {
     matching_coords(rows, is_minima)
 }
 
-#[aoc(day9, part1)]
 pub fn part_1(input: &str) -> u32 {
     let rows = &parse(input);
     minima_coords(rows)
@@ -91,7 +90,6 @@ fn basin_size(rows: &Grid, coords: Coords) -> usize {
     basin.len()
 }
 
-#[aoc(day9, part2)]
 pub fn part_2(input: &str) -> usize {
     let rows = &parse(input);
     minima_coords(rows)

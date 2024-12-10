@@ -23,7 +23,6 @@ fn parse_line(line: &str) -> Result<Vec<char>, ParseErr> {
     Ok(stack)
 }
 
-#[aoc(day10, part1)]
 pub fn part_1(input: &str) -> u64 {
     input
         .lines()
@@ -54,7 +53,6 @@ fn score_stack(stack: Vec<char>) -> u64 {
         .unwrap_or(0)
 }
 
-#[aoc(day10, part2)]
 pub fn part_2(input: &str) -> u64 {
     let scores: Vec<_> = input
         .lines()

@@ -76,7 +76,6 @@ fn parse(contents: &str) -> ParsedInput {
     (nums, boards)
 }
 
-#[aoc(day4, part1)]
 pub fn part_1(input: &str) -> BoardNum {
     let (nums, mut boards) = parse(input);
     for n in nums {
@@ -90,7 +89,6 @@ pub fn part_1(input: &str) -> BoardNum {
     panic!("No winner found!")
 }
 
-#[aoc(day4, part2)]
 pub fn part_2(input: &str) -> BoardNum {
     let (nums, mut boards) = parse(input);
     for n in nums {

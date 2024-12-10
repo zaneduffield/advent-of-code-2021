@@ -8,7 +8,6 @@ fn parse_1(input: &str) -> Vec<usize> {
         .collect()
 }
 
-#[aoc(day8, part1)]
 pub fn part_1(input: &str) -> usize {
     let lens = parse_1(input);
     lens.iter().filter(|&&len| len != 5 && len != 6).count()
@@ -100,7 +99,6 @@ fn decode(pattern: &Pattern) -> u32 {
     )
 }
 
-#[aoc(day8, part2)]
 pub fn part_2(input: &str) -> u32 {
     let patterns = parse_2(input);
     patterns.iter().map(decode).sum()

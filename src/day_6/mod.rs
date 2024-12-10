@@ -22,13 +22,11 @@ fn parse(input: &str) -> Fishies {
     counts
 }
 
-#[aoc(day6, part1)]
 pub fn part_1(input: &str) -> u64 {
     let fishies = parse(input);
     population_after_generations(&fishies, 80)
 }
 
-#[aoc(day6, part2)]
 pub fn part_2(input: &str) -> u64 {
     let fishies = parse(input);
     population_after_generations(&fishies, 256)

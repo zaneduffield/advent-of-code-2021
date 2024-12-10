@@ -152,7 +152,6 @@ fn do_stuff(
     }
     None
 }
-#[aoc(day19, part1)]
 pub fn part_1(input: &str) -> usize {
     let mut unoriented_scans = parse(input);
     let mut unified_scan = FxHashSet::from_iter(unoriented_scans.swap_remove(0).beacons);
@@ -165,7 +164,6 @@ pub fn part_1(input: &str) -> usize {
     unified_scan.len()
 }
 
-#[aoc(day19, part2)]
 pub fn part_2(input: &str) -> u32 {
     let mut unoriented_scans = parse(input);
     let mut unified_scan = FxHashSet::from_iter(unoriented_scans.swap_remove(0).beacons);

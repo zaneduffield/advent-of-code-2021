@@ -72,14 +72,12 @@ fn parse(mut input: &str) -> Target {
     }
 }
 
-#[aoc(day17, part1)]
 pub fn part_1(input: &str) -> i32 {
     let target = parse(input);
     let max_init_y_vel = target.max_y_vel();
     max_init_y_vel * (max_init_y_vel + 1) / 2
 }
 
-#[aoc(day17, part2)]
 pub fn part_2(input: &str) -> u32 {
     let target = parse(input);
     let mut count = 0;

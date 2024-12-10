@@ -66,7 +66,6 @@ fn generation(grid: &mut Grid) -> u64 {
     })
 }
 
-#[aoc(day11, part1)]
 pub fn part_1(input: &str) -> u64 {
     let mut grid = parse(input);
     let mut flashes = 0;
@@ -77,7 +76,6 @@ pub fn part_1(input: &str) -> u64 {
     flashes
 }
 
-#[aoc(day11, part2)]
 pub fn part_2(input: &str) -> usize {
     let mut grid = parse(input);
     1 + (0..)

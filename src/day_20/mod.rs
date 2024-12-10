@@ -123,12 +123,10 @@ fn solve(input: &str, num_iter: u8) -> usize {
     image.count_lit()
 }
 
-#[aoc(day20, part1)]
 pub fn part_1(input: &str) -> usize {
     solve(input, 2)
 }
 
-#[aoc(day20, part2)]
 pub fn part_2(input: &str) -> usize {
     solve(input, 50)
 }
